@@ -1,13 +1,19 @@
 package ast
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/skanehira/go-json/token"
 )
 
+type Element struct {
+	Name  string
+	Value Value
+}
+
 type Object struct {
-	Elements map[string]Value
+	Elements []Element
 	Type     token.TokenType
 }
 
@@ -16,12 +22,12 @@ func (o Object) String() string {
 	out.WriteString("{")
 
 	elements := []string{}
-	for name, node := range o.Elements {
-		e := "\"" + name + "\":" + node.String()
-		elements = append(elements, e)
+	for _, e := range o.Elements {
+		elements = append(elements, fmt.Sprintf("\"%s\":%s", e.Name, e.Value.String()))
 	}
 
 	out.WriteString(strings.Join(elements, ","))
+
 	out.WriteString("}")
 	return out.String()
 }
