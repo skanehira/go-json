@@ -6,17 +6,6 @@ import (
 	"github.com/skanehira/go-json/token"
 )
 
-func TestString(t *testing.T) {
-	want := `"a"`
-	str := String{
-		Value: "a",
-	}
-
-	if str.String() != want {
-		t.Fatalf("want=%s, got=%s", want, str.String())
-	}
-}
-
 func TestObject(t *testing.T) {
 	o := Object{
 		Type: token.Object,
@@ -71,6 +60,10 @@ func TestObject(t *testing.T) {
 
 	if o.String() != want {
 		t.Fatalf("want=%s, got=%s", want, o.String())
+	}
+
+	if o.TokenType() != token.Object {
+		t.Fatalf("want=%s, got=%s", token.String, o.TokenType().String())
 	}
 }
 
@@ -131,5 +124,9 @@ func TestArray(t *testing.T) {
 
 	if a.String() != want {
 		t.Fatalf("want=%s, got=%s", want, a.String())
+	}
+
+	if a.TokenType() != token.Array {
+		t.Fatalf("want=%s, got=%s", token.String, a.TokenType().String())
 	}
 }
