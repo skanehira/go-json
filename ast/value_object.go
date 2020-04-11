@@ -7,7 +7,7 @@ import (
 )
 
 type Object struct {
-	Elements map[string]Node
+	Elements map[string]Value
 	Type     token.TokenType
 }
 

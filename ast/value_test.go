@@ -19,7 +19,7 @@ func TestString(t *testing.T) {
 
 func TestObject(t *testing.T) {
 	o := Object{
-		Elements: map[string]Node{
+		Elements: map[string]Value{
 			"name": String{
 				Type:  token.String,
 				Value: "gorilla",
