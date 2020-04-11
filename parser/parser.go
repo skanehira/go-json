@@ -54,21 +54,13 @@ func (p *Parser) Parse() ast.Value {
 	for !p.curCharIs(0) {
 		switch p.ch {
 		case '"':
-			v := p.ParseString()
-			if p.peekChar() == 0 {
-				value = v
-				break
-			}
+			value = p.ParseString()
 		case '{':
 		case '[':
 
 		default:
 			if isDigit(p.ch) {
-				v := p.ParseInt()
-				if p.peekChar() == 0 {
-					value = v
-					break
-				}
+				value = p.ParseInt()
 			} else {
 
 			}
@@ -85,8 +77,6 @@ func (p *Parser) ParseInt() ast.Int {
 	}
 
 	b := []byte{}
-
-	println(string(p.ch))
 
 	for !p.curCharIs(0) && isDigit(p.ch) {
 		b = append(b, p.ch)
