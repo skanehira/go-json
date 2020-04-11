@@ -72,3 +72,15 @@ func TestObject(t *testing.T) {
 		t.Fatalf("want=%s, got=%s", want, o.String())
 	}
 }
+
+func TestArray(t *testing.T) {
+	a := Array{
+		Values: []Value{},
+		Type:   token.Array,
+	}
+
+	want := "[]"
+	if a.String() != want {
+		t.Fatalf("want=%s, got=%s", want, a.String())
+	}
+}
