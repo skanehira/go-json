@@ -17,25 +17,19 @@ type Parser struct {
 
 func (p *Parser) skipWhitespace() {
 	for p.ch == ' ' || p.ch == '\t' || p.ch == '\n' || p.ch == '\r' {
-		p.readChar()
+		p.position = p.readPosition
+		p.readPosition += 1
+		p.ch = p.input[p.readPosition]
 	}
-}
-
-func (p *Parser) peekChar() byte {
-	if p.readPosition >= len(p.input) {
-		return 0
-	}
-	return p.input[p.readPosition]
 }
 
 func (p *Parser) readChar() {
 	if p.readPosition >= len(p.input) {
 		p.ch = 0
 	} else {
-		p.skipWhitespace()
 		p.ch = p.input[p.readPosition]
 	}
-
+	p.skipWhitespace()
 	p.position = p.readPosition
 	p.readPosition += 1
 }
@@ -46,10 +40,6 @@ func (p *Parser) curCharIs(ch byte) bool {
 
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
-}
-
-func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
 func (p *Parser) Parse() ast.Value {
@@ -79,7 +69,7 @@ func (p *Parser) ParseObject() ast.Object {
 	}
 
 	elements := []ast.Element{}
-	for !p.curCharIs(0) && !p.curCharIs(byte('}')) {
+	for !p.curCharIs(byte('}')) {
 		p.readChar()
 
 		name := strings.Trim(p.ParseString().String(), "\"")
@@ -99,7 +89,7 @@ func (p *Parser) ParseInt() ast.Int {
 
 	pos := p.position
 
-	for !p.curCharIs(0) && isDigit(p.ch) {
+	for isDigit(p.ch) {
 		p.readChar()
 	}
 
@@ -117,7 +107,7 @@ func (p *Parser) ParseString() ast.String {
 	p.readChar()
 	pos := p.position
 
-	for !p.curCharIs(0) && !p.curCharIs(byte('"')) {
+	for !p.curCharIs(byte('"')) {
 		p.readChar()
 	}
 

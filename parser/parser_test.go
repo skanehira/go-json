@@ -49,16 +49,16 @@ func TestParseObject(t *testing.T) {
 		want  string
 	}{
 		{
-			input: []byte(`{"name":"gorilla","age":1}`),
-			want:  `{"name":"gorilla","age":1}`,
+			input: []byte(`{"a": "b","c": 1}`),
+			want:  `{"a":"b","c":1}`,
 		},
 		{
-			input: []byte(`{"age":1,"a":1}`),
-			want:  `{"age":1,"a":1}`,
+			input: []byte(`{"a": 1,"b": 1}`),
+			want:  `{"a":1,"b":1}`,
 		},
 		{
-			input: []byte(`{"human":{"name":"pip"}}`),
-			want:  `{"human":{"name":"pip"}}`,
+			input: []byte(`{"a": {"b": "c", "a": 1}}`),
+			want:  `{"a":{"b":"c","a":1}}`,
 		},
 	}
 
