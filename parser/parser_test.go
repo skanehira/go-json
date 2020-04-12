@@ -53,8 +53,8 @@ func TestParseObject(t *testing.T) {
 			want:  `{"name":"gorilla","age":1}`,
 		},
 		{
-			input: []byte(`{"age":1}`),
-			want:  `{"age":1}`,
+			input: []byte(`{"age":1,"a":1}`),
+			want:  `{"age":1,"a":1}`,
 		},
 		{
 			input: []byte(`{"human":{"name":"pip"}}`),

@@ -63,12 +63,11 @@ func (p *Parser) Parse() ast.Value {
 		} else if p.curCharIs('{') {
 			value = p.ParseObject()
 			break
-		} else {
-			if isDigit(p.ch) {
-				value = p.ParseInt()
-			}
+		} else if isDigit(p.ch) {
+			value = p.ParseInt()
 			break
 		}
+		p.readChar()
 	}
 
 	return value
@@ -84,13 +83,8 @@ func (p *Parser) ParseObject() ast.Object {
 		p.readChar()
 
 		name := strings.Trim(p.ParseString().String(), "\"")
-
-		p.readChar()
-
 		e := ast.Element{Name: name, Value: p.Parse()}
-
 		elements = append(elements, e)
-		p.readChar()
 	}
 
 	o.Elements = elements
@@ -128,5 +122,7 @@ func (p *Parser) ParseString() ast.String {
 	}
 
 	str.Value = string(p.input[pos:p.position])
+
+	p.readChar()
 	return str
 }
