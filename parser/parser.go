@@ -2,7 +2,6 @@ package parser
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/skanehira/go-json/ast"
 	"github.com/skanehira/go-json/token"
@@ -72,7 +71,7 @@ func (p *Parser) ParseObject() ast.Object {
 	for !p.curCharIs(byte('}')) {
 		p.readChar()
 
-		name := strings.Trim(p.ParseString().String(), "\"")
+		name := p.ParseString().Value
 		e := ast.Element{Name: name, Value: p.Parse()}
 		elements = append(elements, e)
 	}
