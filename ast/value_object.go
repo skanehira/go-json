@@ -23,6 +23,9 @@ func (o Object) String() string {
 
 	elements := []string{}
 	for _, e := range o.Elements {
+		if e.Value == nil {
+			continue
+		}
 		elements = append(elements, fmt.Sprintf("\"%s\":%s", e.Name, e.Value.String()))
 	}
 

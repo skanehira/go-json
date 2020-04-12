@@ -2,6 +2,7 @@ package parser
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/skanehira/go-json/ast"
 	"github.com/skanehira/go-json/token"
@@ -47,28 +48,54 @@ func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
 
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
 func (p *Parser) Parse() ast.Value {
 	p.readChar()
 	var value ast.Value
 
 	for !p.curCharIs(0) {
-		switch p.ch {
-		case '"':
+		if p.curCharIs('"') {
 			value = p.ParseString()
-		case '{':
-		case '[':
-
-		default:
+			break
+		} else if p.curCharIs('{') {
+			value = p.ParseObject()
+			break
+		} else {
 			if isDigit(p.ch) {
 				value = p.ParseInt()
-			} else {
-
 			}
+			break
 		}
-		p.readChar()
 	}
 
 	return value
+}
+
+func (p *Parser) ParseObject() ast.Object {
+	o := ast.Object{
+		Type: token.Object,
+	}
+
+	elements := []ast.Element{}
+	for !p.curCharIs(0) && !p.curCharIs(byte('}')) {
+		p.readChar()
+
+		name := strings.Trim(p.ParseString().String(), "\"")
+
+		p.readChar()
+
+		e := ast.Element{Name: name, Value: p.Parse()}
+
+		elements = append(elements, e)
+		p.readChar()
+	}
+
+	o.Elements = elements
+
+	return o
 }
 
 func (p *Parser) ParseInt() ast.Int {
@@ -76,14 +103,13 @@ func (p *Parser) ParseInt() ast.Int {
 		Type: token.Int,
 	}
 
-	b := []byte{}
+	pos := p.position
 
 	for !p.curCharIs(0) && isDigit(p.ch) {
-		b = append(b, p.ch)
 		p.readChar()
 	}
 
-	v, _ := strconv.Atoi(string(b))
+	v, _ := strconv.Atoi(string(p.input[pos:p.position]))
 	i.Value = v
 
 	return i
@@ -94,15 +120,13 @@ func (p *Parser) ParseString() ast.String {
 		Type: token.String,
 	}
 
-	value := []byte{}
-
 	p.readChar()
+	pos := p.position
 
 	for !p.curCharIs(0) && !p.curCharIs(byte('"')) {
-		value = append(value, p.ch)
 		p.readChar()
 	}
 
-	str.Value = string(value)
+	str.Value = string(p.input[pos:p.position])
 	return str
 }
