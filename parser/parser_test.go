@@ -9,8 +9,8 @@ func TestParserString(t *testing.T) {
 		err   error
 	}{
 		{
-			input: []byte(`"string"`),
-			want:  `"string"`,
+			input: []byte(`"a"`),
+			want:  `"a"`,
 			err:   nil,
 		},
 		{
@@ -19,42 +19,12 @@ func TestParserString(t *testing.T) {
 			err:   nil,
 		},
 		{
-			input: []byte(`"a" `),
-			want:  `"a"`,
-			err:   nil,
-		},
-		{
-			input: []byte(`	"a"`),
-			want: `"a"`,
-			err:  nil,
-		},
-		{
-			input: []byte(` "a "`),
-			want:  `"a "`,
-			err:   nil,
-		},
-		{
-			input: []byte(``),
-			want:  `""`,
-			err:   ErrInvalidNextToken,
-		},
-		{
 			input: []byte(`"`),
 			want:  `""`,
 			err:   ErrInvalidNextToken,
 		},
 		{
-			input: []byte(`a`),
-			want:  `""`,
-			err:   ErrInvalidNextToken,
-		},
-		{
 			input: []byte(`"a`),
-			want:  `""`,
-			err:   ErrInvalidNextToken,
-		},
-		{
-			input: []byte(`a"`),
 			want:  `""`,
 			err:   ErrInvalidNextToken,
 		},

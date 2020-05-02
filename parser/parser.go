@@ -24,18 +24,18 @@ func (p *Parser) Init() *Parser {
 }
 
 func (p *Parser) Read() {
-	if p.peekPos >= len(p.input) {
-		p.curToken = 0
-		return
-	}
-
 	// skip space and tab
-	for token := p.input[p.peekPos]; token != 0 &&
+	for token := p.PeekToken(); token != 0 &&
 		(token == 9 || token == 32); {
 
 		p.curPos = p.peekPos
 		p.peekPos++
 		token = p.input[p.peekPos]
+	}
+
+	if p.peekPos >= len(p.input) {
+		p.curToken = 0
+		return
 	}
 
 	p.curToken = p.input[p.peekPos]
@@ -83,6 +83,8 @@ func (p *Parser) ParseString() (ast.Value, error) {
 	}
 
 	v.Value = string(p.input[pos:p.curPos])
+
+	p.Read()
 
 	return v, nil
 }
