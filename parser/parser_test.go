@@ -64,7 +64,7 @@ func TestParserString(t *testing.T) {
 		p := NewParser(tt.input).Init()
 		v, err := p.ParseString()
 		if err != tt.err {
-			t.Fatalf("[case %d] unexpected err: want=nil, got=%s", i, err)
+			t.Fatalf("[case %d] unexpected err: want=%s, got=%s", i, tt.err, err)
 		}
 
 		got := v.String()
