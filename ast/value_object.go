@@ -13,5 +13,8 @@ func (t Object) Type() ValueType {
 }
 
 func (t Object) String() string {
-	return fmt.Sprintf("{%s:%s}", t.Key, t.Value.String())
+	if t.Key == "" && t.Value == nil {
+		return "{}"
+	}
+	return fmt.Sprintf("{\"%s\":%s}", t.Key, t.Value.String())
 }
