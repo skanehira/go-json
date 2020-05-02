@@ -1,20 +1,16 @@
 package ast
 
-import (
-	"strconv"
+import "strconv"
 
-	"github.com/skanehira/go-json/token"
-)
-
-type Int struct {
-	Value int
-	Type  token.TokenType
+type Integer struct {
+	ValueType ValueType
+	Value     int64
 }
 
-func (i Int) String() string {
-	return strconv.Itoa(i.Value)
+func (i Integer) Type() ValueType {
+	return i.ValueType
 }
 
-func (i Int) TokenType() token.TokenType {
-	return i.Type
+func (i Integer) String() string {
+	return strconv.Itoa(int(i.Value))
 }

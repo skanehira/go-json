@@ -1,29 +1,21 @@
 package ast
 
-import (
-	"strings"
-
-	"github.com/skanehira/go-json/token"
-)
-
 type Array struct {
-	Values []Value
-	Type   token.TokenType
+	ValueType ValueType
+	Values    []Value
+}
+
+func (a Array) Type() ValueType {
+	return a.ValueType
 }
 
 func (a Array) String() string {
-	var out strings.Builder
-	out.WriteString("[")
+	value := "["
 
-	values := []string{}
-	for _, value := range a.Values {
-		values = append(values, value.String())
+	for _, v := range a.Values {
+		value += v.String()
 	}
-	out.WriteString(strings.Join(values, ","))
-	out.WriteString("]")
-	return out.String()
-}
 
-func (a Array) TokenType() token.TokenType {
-	return a.Type
+	value += "]"
+	return value
 }

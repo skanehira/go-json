@@ -1,40 +1,17 @@
 package ast
 
-import (
-	"fmt"
-	"strings"
-
-	"github.com/skanehira/go-json/token"
-)
-
-type Element struct {
-	Name  string
-	Value Value
-}
+import "fmt"
 
 type Object struct {
-	Elements []Element
-	Type     token.TokenType
+	ValueType ValueType
+	Key       string
+	Value     Value
 }
 
-func (o Object) String() string {
-	var out strings.Builder
-	out.WriteString("{")
-
-	elements := []string{}
-	for _, e := range o.Elements {
-		if e.Value == nil {
-			continue
-		}
-		elements = append(elements, fmt.Sprintf("\"%s\":%s", e.Name, e.Value.String()))
-	}
-
-	out.WriteString(strings.Join(elements, ","))
-
-	out.WriteString("}")
-	return out.String()
+func (t Object) Type() ValueType {
+	return t.ValueType
 }
 
-func (o Object) TokenType() token.TokenType {
-	return o.Type
+func (t Object) String() string {
+	return fmt.Sprintf("{%s:%s}", t.Key, t.Value.String())
 }

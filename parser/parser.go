@@ -1,117 +1,88 @@
 package parser
 
 import (
-	"strconv"
-
 	"github.com/skanehira/go-json/ast"
-	"github.com/skanehira/go-json/token"
 )
 
 type Parser struct {
-	input        []byte
-	position     int
-	readPosition int
-	ch           byte
+	values   []ast.Value
+	input    []byte
+	curPos   int
+	peekPos  int
+	curToken byte
 }
 
-func (p *Parser) skipWhitespace() {
-	for p.ch == ' ' || p.ch == '\t' || p.ch == '\n' || p.ch == '\r' {
-		p.position = p.readPosition
-		p.readPosition += 1
-		p.ch = p.input[p.readPosition]
+func NewParser(input []byte) *Parser {
+	return &Parser{
+		input: input,
 	}
 }
 
-func (p *Parser) readChar() {
-	if p.readPosition >= len(p.input) {
-		p.ch = 0
-	} else {
-		p.ch = p.input[p.readPosition]
+func (p *Parser) Init() *Parser {
+	p.Read()
+	return p
+}
+
+func (p *Parser) Read() {
+	if p.peekPos >= len(p.input) {
+		p.curToken = 0
+		return
 	}
-	p.skipWhitespace()
-	p.position = p.readPosition
-	p.readPosition += 1
+
+	// skip space and tab
+	for token := p.input[p.peekPos]; token != 0 &&
+		(token == 9 || token == 32); {
+
+		p.curPos = p.peekPos
+		p.peekPos++
+		token = p.input[p.peekPos]
+	}
+
+	p.curToken = p.input[p.peekPos]
+	p.curPos = p.peekPos
+	p.peekPos++
 }
 
-func (p *Parser) curCharIs(ch byte) bool {
-	return p.ch == ch
+func (p *Parser) CurToken() byte {
+	return p.curToken
 }
 
-func isDigit(ch byte) bool {
-	return '0' <= ch && ch <= '9'
+func (p *Parser) CurTokenIs(b byte) bool {
+	return p.CurToken() == b
 }
 
-func (p *Parser) Parse() ast.Value {
-	p.readChar()
-	var value ast.Value
+func (p *Parser) PeekToken() byte {
+	if p.peekPos >= len(p.input) {
+		return 0
+	}
+	return p.input[p.peekPos]
+}
 
-	for !p.curCharIs(0) {
-		if p.curCharIs('"') {
-			value = p.ParseString()
-			break
-		} else if p.curCharIs('{') {
-			value = p.ParseObject()
-			break
-		} else if isDigit(p.ch) {
-			value = p.ParseInt()
-			break
+func (p *Parser) PeekTokenIs(b byte) bool {
+	return p.PeekToken() == b
+}
+
+func (p *Parser) ParseString() (ast.Value, error) {
+	v := ast.String{
+		ValueType: ast.StringType,
+	}
+
+	if !p.CurTokenIs('"') {
+		return v, ErrInvalidNextToken
+	}
+
+	p.Read()
+
+	pos := p.curPos
+
+	for !p.CurTokenIs('"') {
+		if p.CurTokenIs(0) {
+			return v, ErrInvalidNextToken
 		}
-		p.readChar()
+		p.Read()
 	}
 
-	return value
-}
+	v.Value = string(p.input[pos:p.curPos])
 
-func (p *Parser) ParseObject() ast.Object {
-	o := ast.Object{
-		Type: token.Object,
-	}
-
-	elements := []ast.Element{}
-	for !p.curCharIs(byte('}')) {
-		p.readChar()
-
-		name := p.ParseString().Value
-		e := ast.Element{Name: name, Value: p.Parse()}
-		elements = append(elements, e)
-	}
-
-	o.Elements = elements
-
-	return o
-}
-
-func (p *Parser) ParseInt() ast.Int {
-	i := ast.Int{
-		Type: token.Int,
-	}
-
-	pos := p.position
-
-	for isDigit(p.ch) {
-		p.readChar()
-	}
-
-	v, _ := strconv.Atoi(string(p.input[pos:p.position]))
-	i.Value = v
-
-	return i
-}
-
-func (p *Parser) ParseString() ast.String {
-	str := ast.String{
-		Type: token.String,
-	}
-
-	p.readChar()
-	pos := p.position
-
-	for !p.curCharIs(byte('"')) {
-		p.readChar()
-	}
-
-	str.Value = string(p.input[pos:p.position])
-
-	p.readChar()
-	return str
+	return v, nil
 }

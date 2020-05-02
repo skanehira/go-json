@@ -1,19 +1,16 @@
 package ast
 
-import "github.com/skanehira/go-json/token"
+import "strconv"
 
 type Bool struct {
-	Value bool
-	Type  token.TokenType
+	ValueType ValueType
+	Value     bool
+}
+
+func (b Bool) Type() ValueType {
+	return b.ValueType
 }
 
 func (b Bool) String() string {
-	if b.Value == true {
-		return "true"
-	}
-	return "false"
-}
-
-func (b Bool) TokenType() token.TokenType {
-	return b.Type
+	return strconv.FormatBool(b.Value)
 }
