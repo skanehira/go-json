@@ -93,6 +93,10 @@ func TestParseObjectFailed(t *testing.T) {
 			input: []byte(`{:"b"}`),
 			want:  `next token=:: invalid next token`,
 		},
+		{
+			input: []byte(`{"b":}`),
+			want:  `current token=}: invalid token`,
+		},
 	}
 
 	for i, tt := range tests {

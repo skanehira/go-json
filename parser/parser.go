@@ -51,6 +51,10 @@ func (p *Parser) CurToken() byte {
 	return p.curToken
 }
 
+func (p *Parser) CurTokenString() string {
+	return string(p.curToken)
+}
+
 func (p *Parser) CurTokenIs(b byte) bool {
 	return p.CurToken() == b
 }
@@ -60,6 +64,10 @@ func (p *Parser) PeekToken() byte {
 		return 0
 	}
 	return p.input[p.peekPos]
+}
+
+func (p *Parser) PeekTokenString() string {
+	return string(p.PeekToken())
 }
 
 func (p *Parser) PeekTokenIs(b byte) bool {
@@ -99,7 +107,7 @@ func (p *Parser) ParseObject() (ast.Value, error) {
 	}
 
 	if !p.PeekTokenIs('"') {
-		return nil, errors.Wrap(ErrInvalidNextToken, "next token="+string(p.PeekToken()))
+		return nil, errors.Wrap(ErrInvalidNextToken, "next token="+p.PeekTokenString())
 	}
 
 	// parse key
@@ -112,7 +120,7 @@ func (p *Parser) ParseObject() (ast.Value, error) {
 	v.Key = str.(ast.String).Value
 
 	if !p.CurTokenIs(':') {
-		return nil, errors.Wrap(ErrInvalidToken, "current token="+string(p.CurToken()))
+		return nil, errors.Wrap(ErrInvalidToken, "current token="+p.CurTokenString())
 	}
 
 	// parse value
@@ -136,5 +144,5 @@ func (p *Parser) Parse() (ast.Value, error) {
 	case '[':
 	}
 
-	return nil, ErrInvalidNextToken
+	return nil, errors.Wrap(ErrInvalidToken, "current token="+p.CurTokenString())
 }
