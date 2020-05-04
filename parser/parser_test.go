@@ -18,6 +18,16 @@ func TestParserString(t *testing.T) {
 			err:   nil,
 		},
 		{
+			input: []byte(` "a"`),
+			want:  `"a"`,
+			err:   nil,
+		},
+		{
+			input: []byte(`"a" `),
+			want:  `"a"`,
+			err:   nil,
+		},
+		{
 			input: []byte(`""`),
 			want:  `""`,
 			err:   nil,

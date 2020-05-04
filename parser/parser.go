@@ -30,9 +30,13 @@ func (p *Parser) Init() *Parser {
 func (p *Parser) SkipWhiteSpace() {
 	for token := p.PeekToken(); token != 0 &&
 		(token == 9 || token == 32); {
-
 		p.curPos = p.peekPos
 		p.peekPos++
+
+		if p.peekPos >= len(p.input) {
+			break
+		}
+
 		token = p.input[p.peekPos]
 	}
 }
