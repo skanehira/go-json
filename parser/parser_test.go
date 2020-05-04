@@ -34,7 +34,7 @@ func TestParserString(t *testing.T) {
 		p := NewParser(tt.input).Init()
 		v, err := p.ParseString()
 		if err != tt.err {
-			t.Fatalf("[case %d] unexpected err: want=%#v, got=%#v", i, tt.err, err)
+			t.Fatalf("[case %d] unexpected err: want=%s, got=%s", i, tt.err, err)
 		}
 
 		got := v.String()
@@ -48,25 +48,22 @@ func TestParseObject(t *testing.T) {
 	tests := []struct {
 		input []byte
 		want  string
-		err   error
 	}{
 		{
 			input: []byte(`{"a":"b"}`),
 			want:  `{"a":"b"}`,
-			err:   nil,
 		},
 		{
 			input: []byte(`{}`),
 			want:  `{}`,
-			err:   nil,
 		},
 	}
 
 	for i, tt := range tests {
 		p := NewParser(tt.input).Init()
 		v, err := p.ParseObject()
-		if err != tt.err {
-			t.Fatalf("[case %d] unexpected err: want=%#v, got=%#v", i, tt.err, err)
+		if err != nil {
+			t.Fatalf("[case %d] unexpected err: want=nil, got=%#v", i, err)
 		}
 
 		got := v.String()
@@ -97,13 +94,21 @@ func TestParseObjectFailed(t *testing.T) {
 			input: []byte(`{"b":}`),
 			want:  `current token=}: invalid token`,
 		},
+		{
+			input: []byte(`{"b"`),
+			want:  `current token=null(0): invalid token`,
+		},
+		{
+			input: []byte(`{"b":`),
+			want:  `current token=null(0): invalid token`,
+		},
 	}
 
 	for i, tt := range tests {
 		p := NewParser(tt.input).Init()
 		_, got := p.ParseObject()
 		if got.Error() != tt.want {
-			t.Fatalf("[case %d] unexpected value: want=%s, got=%s", i, tt.want, got)
+			t.Fatalf("[case %d] unexpected value: want=%#v, got=%#v", i, tt.want, got)
 		}
 	}
 

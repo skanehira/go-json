@@ -52,6 +52,9 @@ func (p *Parser) CurToken() byte {
 }
 
 func (p *Parser) CurTokenString() string {
+	if p.CurTokenIs(0) {
+		return "null(0)"
+	}
 	return string(p.curToken)
 }
 
@@ -67,6 +70,9 @@ func (p *Parser) PeekToken() byte {
 }
 
 func (p *Parser) PeekTokenString() string {
+	if p.PeekTokenIs(0) {
+		return "null(0)"
+	}
 	return string(p.PeekToken())
 }
 
