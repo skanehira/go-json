@@ -1,6 +1,9 @@
 package parser
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/pkg/errors"
 	"github.com/skanehira/go-json/ast"
 )
@@ -137,6 +140,30 @@ func (p *Parser) ParseObject() (ast.Value, error) {
 	}
 
 	v.Value = value
+
+	return v, nil
+}
+
+func (p *Parser) ParseInteger() (ast.Value, error) {
+	v := ast.Integer{
+		ValueType: ast.IntType,
+	}
+
+	pos := p.curPos
+
+	for 48 <= p.curToken && p.curToken <= 57 {
+		p.Read()
+	}
+
+	value := p.input[pos : p.curPos+1]
+	i, err := strconv.Atoi(string(value))
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert \"%s\" to integer", value)
+	}
+
+	v.Value = int64(i)
+
+	p.Read()
 
 	return v, nil
 }
