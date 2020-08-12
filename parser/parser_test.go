@@ -24,7 +24,7 @@ func TestParseObject(t *testing.T) {
 		o := p.parseObject()
 
 		if o.String() != tt.want {
-			t.Fatalf("wront object ast. want=%s, got=%s", tt.want, o.String())
+			t.Fatalf("wrong object ast. want=%s, got=%s", tt.want, o.String())
 		}
 	}
 }
@@ -46,7 +46,7 @@ func TestParseArray(t *testing.T) {
 		a := p.parseArray()
 
 		if a.String() != tt.want {
-			t.Fatalf("wront object ast. want=%s, got=%s", tt.want, a.String())
+			t.Fatalf("wrong object ast. want=%s, got=%s", tt.want, a.String())
 		}
 	}
 }

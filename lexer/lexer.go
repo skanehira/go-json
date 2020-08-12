@@ -45,7 +45,7 @@ func (l *Lexer) readNumber() string {
 }
 
 func isDigit(ch byte) bool {
-	return '0' <= ch && ch <= '9' || ch == '-'
+	return '0' <= ch && ch <= '9'
 }
 
 func (l *Lexer) readLetter() string {
@@ -111,15 +111,11 @@ func (l *Lexer) NextToken() token.Token {
 			}
 			return tok
 		} else if isDigit(l.ch) {
-			tok.Literal = l.readNumber()
-			if l.ch == '.' {
-				l.readChar()
-				literal := l.readNumber()
-				tok.Literal += "." + literal
-				tok.Type = token.FLOAT
-			} else {
-				tok.Type = token.INT
-			}
+			return l.parseNumberToken()
+		} else if l.ch == '-' && isDigit(l.peekChar()) {
+			l.readChar()
+			tok = l.parseNumberToken()
+			tok.Literal = "-" + tok.Literal
 			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
@@ -127,6 +123,20 @@ func (l *Lexer) NextToken() token.Token {
 	}
 
 	l.readChar()
+	return tok
+}
+
+func (l *Lexer) parseNumberToken() token.Token {
+	var tok token.Token
+	tok.Literal = l.readNumber()
+	if l.ch == '.' {
+		l.readChar()
+		literal := l.readNumber()
+		tok.Literal += "." + literal
+		tok.Type = token.FLOAT
+	} else {
+		tok.Type = token.INT
+	}
 	return tok
 }
 
