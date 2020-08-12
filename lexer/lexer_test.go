@@ -7,7 +7,7 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-	input := `{"types": [true, false, null, "string", 11]}`
+	input := `{"types": [true, false, null, "string", 11, 55.55]}`
 
 	tests := []struct {
 		wantType    token.TokenType
@@ -26,6 +26,8 @@ func TestNextToken(t *testing.T) {
 		{token.LETTER, "string"},
 		{token.COMMA, ","},
 		{token.INT, "11"},
+		{token.COMMA, ","},
+		{token.FLOAT, "55.55"},
 		{token.RBRACKET, "]"},
 		{token.RBRACE, "}"},
 	}

@@ -12,8 +12,8 @@ func TestParseObject(t *testing.T) {
 	}{
 		{`{}`},
 		{`{"name":"gorilla"}`},
-		{`{"name":"gorilla","age":27,"like":"banan"}`},
-		{`{"banana":100}`},
+		{`{"name":"gorilla","age":27,"like":"banana"}`},
+		{`{"banana":100,"amount":55.55}`},
 		{`{"likes":["cat","banana","dog"]}`},
 	}
 
@@ -36,7 +36,7 @@ func TestParseArray(t *testing.T) {
 		{`[]`},
 		{`["string",null,true,false,10]`},
 		{`[{"name":"gorilla"},["string",true,false,10],10,true,false,10,"string"]`},
-		{`[{"name":"gorilla"},[[]]]`},
+		{`[{"name":"gorilla"},[[55.55,10.5,10]]]`},
 	}
 
 	for _, tt := range tests {

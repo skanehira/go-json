@@ -46,6 +46,8 @@ func (p *Parser) Parse() ast.Value {
 		v = p.parseString()
 	case token.INT:
 		v = p.parseInt()
+	case token.FLOAT:
+		v = p.parseFloat()
 	case token.TRUE, token.FALSE:
 		v = p.parseBool()
 	case token.NULL:
@@ -75,12 +77,22 @@ func (p *Parser) parseBool() ast.Bool {
 }
 
 func (p *Parser) parseInt() ast.Int {
-	i, err := strconv.Atoi(p.curToken.Literal)
+	i, err := strconv.ParseInt(p.curToken.Literal, 10, 64)
 	if err != nil {
 		log.Panicf("wrong int literal: %s", p.curToken.Literal)
 	}
 	return ast.Int{
-		Value: int64(i),
+		Value: i,
+	}
+}
+
+func (p *Parser) parseFloat() ast.Float {
+	f, err := strconv.ParseFloat(p.curToken.Literal, 64)
+	if err != nil {
+		log.Panicf("wrong float literal: %s", p.curToken.Literal)
+	}
+	return ast.Float{
+		Value: f,
 	}
 }
 

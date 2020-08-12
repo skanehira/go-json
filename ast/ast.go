@@ -2,7 +2,6 @@ package ast
 
 import (
 	"bytes"
-	"fmt"
 	"strconv"
 )
 
@@ -84,7 +83,15 @@ type Int struct {
 }
 
 func (i Int) String() string {
-	return fmt.Sprintf("%d", i.Value)
+	return strconv.FormatInt(i.Value, 10)
+}
+
+type Float struct {
+	Value float64
+}
+
+func (f Float) String() string {
+	return strconv.FormatFloat(f.Value, 'f', -1, 64)
 }
 
 type Bool struct {

@@ -17,9 +17,8 @@ const (
 	FALSE = "FALSE"
 	NULL  = "NULL"
 
-	OBJECT = "OBJECT"
-	ARRAY  = "ARRAY"
-	INT    = "INT"
+	INT   = "INT"
+	FLOAT = "FLOAT"
 
 	LETTER = "LETTER"
 )
