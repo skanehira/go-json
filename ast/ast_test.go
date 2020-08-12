@@ -12,13 +12,15 @@ func TestObject(t *testing.T) {
 					Bool{false},
 					Null{},
 					Int{10},
+					Float{55.55},
+					Int{-11},
 				},
 			},
 			},
 		},
 	}
 
-	want := `{"name":"gorilla","types":[true,false,null,10]}`
+	want := `{"name":"gorilla","types":[true,false,null,10,55.55,-11]}`
 	if obj.String() != want {
 		t.Fatalf("wrong object. want=%s got=%s", obj.String(), want)
 	}

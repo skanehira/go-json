@@ -36,7 +36,7 @@ func TestParseArray(t *testing.T) {
 		{`[]`},
 		{`["string",null,true,false,10]`},
 		{`[{"name":"gorilla"},["string",true,false,10],10,true,false,10,"string"]`},
-		{`[{"name":"gorilla"},[[55.55,10.5,10]]]`},
+		{`[{"name":"gorilla"},[[55.55,10.5,10,-10,-10.1]]]`},
 	}
 
 	for _, tt := range tests {
